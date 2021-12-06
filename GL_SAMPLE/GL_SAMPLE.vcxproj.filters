@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="리소스 파일">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="SOURCES">
+      <UniqueIdentifier>{7536330c-51ed-42dd-af6d-e72e47e50d18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SOURCES\glad">
+      <UniqueIdentifier>{83c205b8-7851-4e9a-b3b0-ac2cb32756de}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="cpp\GL_Func.cpp">
+      <Filter>SOURCES</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\GL_Main.cpp">
+      <Filter>SOURCES</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\GLFW_UI.cpp">
+      <Filter>SOURCES</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\main.cpp">
+      <Filter>SOURCES</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\Mesh.cpp">
+      <Filter>SOURCES</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\GLAD\glad.c">
+      <Filter>SOURCES\glad</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DDSTextureLoader.cpp">
+      <Filter>SOURCES</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX_Func.cpp">
+      <Filter>SOURCES</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\DX_Main.cpp">
+      <Filter>SOURCES</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="cpp\Mesh.h">
+      <Filter>SOURCES</Filter>
+    </ClInclude>
+    <ClInclude Include="cpp\stb_image.h">
+      <Filter>SOURCES</Filter>
+    </ClInclude>
+    <ClInclude Include="cpp\DDSTextureLoader.h">
+      <Filter>SOURCES</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
