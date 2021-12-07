@@ -322,24 +322,27 @@ void GL_Control_Shader_for_Object_One( GLuint &m_program )
 
 
 // For Object #2
-glm::mat4 Get_Drag_Rotation( void );
+glm::mat4 Get_Drag_Rotation( int Num );
 //Update
 void GL_Control_Shader_for_Object_Two( GLuint &m_program , GLuint &m_Texture, int Num )
 {
 	// ArcBall Rotation
-	glm::mat4 WorldMatrix = Get_Drag_Rotation();
+	//glm::mat4 WorldMatrix = Get_Drag_Rotation();
 
 	if (Num == 1)
 	{
+		glm::mat4 WorldMatrix = Get_Drag_Rotation(1);
 		//glm::mat4 TranslateMatrix = glm::scale(WorldMatrix, glm::vec3(2.0f, 2.0f, 2.0f));
-		glm::mat4 RotationMatrix = glm::rotate(WorldMatrix, 1.570795f, glm::vec3(0.0f, 0.0f, 1.0f));
-		glm::mat4 TranslateMatrix = glm::translate(RotationMatrix, glm::vec3(-1.5f, 0.0f, 0.0f));
+		//glm::mat4 RotationMatrix = glm::rotate(WorldMatrix, 1.570795f, glm::vec3(0.0f, 0.0f, 1.0f));
+		glm::mat4 TranslateMatrix = glm::translate(WorldMatrix, glm::vec3(-1.5f, 0.0f, 0.0f));
 		glm::mat4 ScaleMatrix = glm::scale(TranslateMatrix, glm::vec3(2.0f, 1.0f, 1.0f));
 		GL_SetShader_MVP_Matrices(m_program, ScaleMatrix);
 		glUniformMatrix4fv(glGetUniformLocation(m_program, "worldMat"), 1, GL_FALSE, &ScaleMatrix[0][0]);
+		
 	}
 	if (Num == 2)
 	{
+		glm::mat4 WorldMatrix = Get_Drag_Rotation(2);
 		glm::mat4 TranslateMatrix = glm::translate(WorldMatrix, glm::vec3(0.5f, 0.0f, 0.0f));
 		glm::mat4 ScaleMatrix = glm::scale(TranslateMatrix, glm::vec3(2.0f, 1.0f, 1.0f));
 		GL_SetShader_MVP_Matrices(m_program, ScaleMatrix);
@@ -347,8 +350,9 @@ void GL_Control_Shader_for_Object_Two( GLuint &m_program , GLuint &m_Texture, in
 	}
 	if (Num == 3)
 	{
-		glm::mat4 RotationMatrix = glm::rotate(WorldMatrix, 1.570795f, glm::vec3(0.0f, 0.0f, 1.0f));
-		glm::mat4 TranslateMatrix = glm::translate(RotationMatrix, glm::vec3(1.5f, -1.0f, 0.0f));
+		glm::mat4 WorldMatrix = Get_Drag_Rotation(3);
+		//glm::mat4 RotationMatrix = glm::rotate(WorldMatrix, 1.570795f, glm::vec3(0.0f, 0.0f, 1.0f));
+		glm::mat4 TranslateMatrix = glm::translate(WorldMatrix, glm::vec3(2.5f, 0.0f, 0.0f));
 		glm::mat4 ScaleMatrix = glm::scale(TranslateMatrix, glm::vec3(2.0f, 1.0f, 1.0f));
 		GL_SetShader_MVP_Matrices(m_program, ScaleMatrix);
 		glUniformMatrix4fv(glGetUniformLocation(m_program, "worldMat"), 1, GL_FALSE, &ScaleMatrix[0][0]);

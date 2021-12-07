@@ -155,6 +155,7 @@ void RenderScene_GL( void )		// without swap
 		// DrawCall for Object #2
 		glUseProgram(m_program[1]);		
 		GL_Control_Shader_for_Object_Two( m_program[1] , m_Texture[0], 1 );
+
 				
 		glBindVertexArray(m_VAO[1]);
 		glDrawElements(GL_TRIANGLES, (GLsizei)m_NUM_MESH_INDEX[1], GL_UNSIGNED_INT, 0);

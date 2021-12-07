@@ -16,13 +16,7 @@ void error_callback(int error, const char* description)
 	printf("Error: %s\n", description);
 }
 
-#include <iostream>
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-	if ( key == GLFW_KEY_ESCAPE && action == GLFW_PRESS )		glfwSetWindowShouldClose(window, GLFW_TRUE);
-	if (key == GLFW_KEY_1 || key == GLFW_KEY_2 || key == GLFW_KEY_3 && action == GLFW_PRESS)
-		std::cout << "asdf" << std::endl;
-}
+
 
 
 
@@ -33,17 +27,90 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 glm::vec2 drag_start(0.0f);		// cursor position when button pressed
 
 glm::mat4 model_rotation(1.0f);	// rotation matrix from prev dragging
-glm::mat4 drag_rotation(1.0f);	// rotation by current dragging epoch
+glm::mat4 model_rotation2(1.0f);
+glm::mat4 model_rotation3(1.0f);
+glm::mat4 joint1Rotation(1.0f);	// rotation by current dragging epoch
+glm::mat4 joint2Rotation(1.0f);
+glm::mat4 joint3Rotation(1.0f);
 
 glm::mat4 model_translation(1.0f);
 glm::mat4 drag_translation(1.0f);
 
-
-glm::mat4 Get_Drag_Rotation( void ){	return drag_rotation;	}
+glm::mat4 Get_Drag_Rotation(int Num) { if (Num == 1) return joint1Rotation; if (Num == 2) return joint2Rotation; if (Num == 3) return joint3Rotation; }
 
 
 static bool is_drag = false;
 static bool is_left_mouse = true;
+
+static float RotateAngle1 = 0.0f;
+static float RotateAngle2 = 0.0f;
+static float RotateAngle3 = 0.0f;
+static int SelectedJoint = 1;
+glm::vec4 joint2Vec = glm::vec4(glm::vec3(-0.5f, 0.0f, 0.0f), 1.0f);
+glm::vec4 joint3Vec = glm::vec4(glm::vec3(0, 0, 1.5f), 1.0f);
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)		glfwSetWindowShouldClose(window, GLFW_TRUE);
+
+	if (key == GLFW_KEY_1 && action == GLFW_PRESS) //Select Joint
+		SelectedJoint = 1;
+	if (key == GLFW_KEY_2 && action == GLFW_PRESS)
+		SelectedJoint = 2;
+	if (key == GLFW_KEY_3 && action == GLFW_PRESS)
+		SelectedJoint = 3;
+
+	glm::mat4 view_matrix(1.0f);
+	//glm::mat3 to_world = glm::inverse(glm::mat3(view_matrix));
+	if (key == GLFW_KEY_UP && action == GLFW_PRESS)
+	{
+		if (SelectedJoint == 1)
+		{
+			RotateAngle1 += 0.1f;
+		}
+		if (SelectedJoint == 2)
+		{
+			RotateAngle2 += 0.1f;
+		}
+		if (SelectedJoint == 3)
+		{
+			RotateAngle3 += 0.1f;
+		}
+		//glm::mat4 RotateMatParentParent = glm::rotate(glm::mat4(1.0f), RotateAngle1, glm::vec3(1.0f, 0.0f, 0.0f));
+		//glm::mat4 RotateMatParent = glm::translate(RotateMatParentParent, glm::vec3(-0.5f, 0.0f, 0.0f)) * glm::rotate(RotateMatParentParent, RotateAngle2, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::translate(RotateMatParentParent, glm::vec3(0.5f, 0.0f, 0.0f));
+		//glm::mat4 RotateMat = glm::translate(RotateMatParentParent, glm::vec3(1.5f, 0.0f, 0.0f)) * glm::rotate(RotateMatParent, RotateAngle3, glm::vec3(0.0f, 0.0f, 1.0f)) * glm::translate(RotateMatParentParent, glm::vec3(-1.5f, 0.0f, 0.0f));
+
+		glm::mat4 RotateMatParentParent = glm::rotate(glm::mat4(1.0f), RotateAngle1, glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 RotateMatParent = RotateMatParentParent * glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, 0.f, 0.f)) * glm::rotate(glm::mat4(1.0f), RotateAngle2, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.f, 0.f));
+		glm::mat4 RotateMat = RotateMatParent * glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, 0.0f, 0.0f)) * glm::rotate(glm::mat4(1.0f), RotateAngle3, glm::vec3(0.0f, 0.0f, 1.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, 0.0f, 0.0f));
+		
+		joint1Rotation = RotateMatParentParent * model_rotation;
+		joint2Rotation = RotateMatParent * model_rotation2;
+		joint3Rotation = RotateMat * model_rotation3;
+	}
+	if (key == GLFW_KEY_DOWN && action == GLFW_PRESS)
+	{
+		if (SelectedJoint == 1)
+		{
+			RotateAngle1 -= 0.1f;
+		}
+		if (SelectedJoint == 2)
+		{
+			RotateAngle2 -= 0.1f;
+		}
+		if (SelectedJoint == 3)
+		{
+			RotateAngle3 -= 0.1f;
+		}
+		glm::mat4 RotateMatParentParent = glm::rotate(glm::mat4(1.0f), RotateAngle1, glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 RotateMatParent = RotateMatParentParent * glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, 0.f, 0.f)) * glm::rotate(glm::mat4(1.0f), RotateAngle2, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.f, 0.f));
+		glm::mat4 RotateMat = RotateMatParent * glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, 0.0f, 0.0f)) * glm::rotate(glm::mat4(1.0f), RotateAngle3, glm::vec3(0.0f, 0.0f, 1.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, 0.0f, 0.0f));
+
+		joint1Rotation = RotateMatParentParent * model_rotation;
+		joint2Rotation = RotateMatParent * model_rotation2;
+		joint3Rotation = RotateMat * model_rotation3;
+	}
+}
 
 void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 {
@@ -73,7 +140,9 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 		
 				if( button == GLFW_MOUSE_BUTTON_LEFT )
 				{
-					model_rotation = drag_rotation;
+					model_rotation = joint1Rotation;
+					model_rotation2 = joint2Rotation;
+					model_rotation3 = joint3Rotation;
 				}
 				else
 				{
@@ -88,7 +157,12 @@ void mouse_button_callback(GLFWwindow* window, int button, int action, int mods)
 
 }
 
+// mouse wheel
+static float cameraZ = 30.0f;
+static float cameraX = 0.0f;
+static float cameraY = 0.0f;
 
+static float camPos[3] = { 0 };
 
 static bool IS_DX = false;
 
@@ -111,17 +185,20 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos)
 
 		float angle = dragLen / 800.0f / 2.0f * 3.14159265358979323846f; //800->height
 
-		if( IS_DX )	angle = -angle;	
+		glm::mat4 RotateMatParentParent = glm::rotate(glm::mat4(1.0f), RotateAngle1, glm::vec3(1.0f, 0.0f, 0.0f));
+		glm::mat4 RotateMatParent = RotateMatParentParent * glm::translate(glm::mat4(1.0f), glm::vec3(-0.5f, 0.f, 0.f)) * glm::rotate(glm::mat4(1.0f), RotateAngle2, glm::vec3(0.0f, 1.0f, 0.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(0.5f, 0.f, 0.f));
+		glm::mat4 RotateMat = RotateMatParent * glm::translate(glm::mat4(1.0f), glm::vec3(1.5f, 0.0f, 0.0f)) * glm::rotate(glm::mat4(1.0f), RotateAngle3, glm::vec3(0.0f, 0.0f, 1.0f)) * glm::translate(glm::mat4(1.0f), glm::vec3(-1.5f, 0.0f, 0.0f));
 	
-		drag_rotation = glm::rotate(glm::mat4(1.0f), angle, rot_axis) * model_rotation;
-
+		joint1Rotation = RotateMatParentParent * glm::rotate(glm::mat4(1.0f), angle, rot_axis) * model_rotation;
+		joint2Rotation = RotateMatParent * glm::rotate(glm::mat4(1.0f), angle, rot_axis) * model_rotation2;
+		joint3Rotation = RotateMat * glm::rotate(glm::mat4(1.0f), angle, rot_axis) * model_rotation3;
 	}
 	else	// drag with right button
 	{
-		float dist = dragLen * 0.01f;
-		glm::vec2 transVec = glm::normalize(drag_vec) * dist;
+		//float dist = dragLen * 0.01f;
+		//glm::vec2 transVec = glm::normalize(drag_vec) * dist;
 
-		drag_translation = glm::translate( glm::mat4(1.0f),  glm::vec3(transVec,0.0f) ) * model_translation;
+		//drag_translation = glm::translate( glm::mat4(1.0f),  glm::vec3(transVec,0.0f) ) * model_translation;
 	}
 
 
@@ -135,21 +212,19 @@ void Fill_Drag_Rotation( float f[16] )
 {
 //	drag_rotation = glm::translate( glm::mat4(1.0f) , glm::vec3(2.0f,3.0f,4.0f) );
 
-	const float *pSource = (const float*)glm::value_ptr(drag_rotation);
+	const float *pSource = (const float*)glm::value_ptr(joint1Rotation);
 	for (int i = 0; i < 16; ++i )
 		f[i] = pSource[i];
 }
 
 
-// mouse wheel
-static float cameraZ = 30.0f;
 
-static float camPos[3] = {0};
 
 float* Get_Camera_Pos( void )
 {
-	camPos[0] = camPos[1] = 0.0f;
-
+	//camPos[0] = camPos[1] = 0.0f;
+	camPos[0] = cameraX;
+	camPos[1] = cameraY;
 	camPos[2] = cameraZ;
 
 	return camPos;
